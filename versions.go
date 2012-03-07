@@ -4,6 +4,7 @@ import(
 	"os"
 	"strings"
 	"strconv"
+	"fmt"
 	)
 
 type Version struct{
@@ -14,6 +15,7 @@ type Version struct{
 
 func NewVersion(rawVersions string) (*Version, os.Error) {
 	rawVersions = strings.Trim(rawVersions, "\r\n ")
+	rawVersions = trimExtension(rawVersions)
 
 	versions := strings.Split(rawVersions, ".")
 	

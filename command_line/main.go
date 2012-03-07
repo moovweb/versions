@@ -7,7 +7,7 @@ import(
 	)
 
 func usage() {
-	fmt.Printf("Usage:\n\tversions <search_path> <name> <version_pattern>")
+	fmt.Printf("Usage:\n\tversions <search_path> <name> <version_pattern>\n")
 	os.Exit(1)
 }
 

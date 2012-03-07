@@ -3,7 +3,6 @@ package versions
 import(
 	"os"
 	"path/filepath"
-	"fmt"
 	)
 
 type FilePath struct{
@@ -30,10 +29,7 @@ func FindByName(rootPath string, name string) (*FilePath, os.Error){
 	for _, thisFilePath := range(filePaths) {
 		pattern, _ := NewPattern("> " + newestFilePath.Version.String() )
 
-		fmt.Printf("Newest pattern:%v\n", pattern)
-
 		if pattern.Match(thisFilePath.Version) {
-			fmt.Printf("Version %v is newer than %v\n", thisFilePath.Version.String(), newestFilePath.Version.String())
 			newestFilePath = thisFilePath
 		}
 	}
@@ -50,6 +46,8 @@ func FindByNameAndVersion(rootPath string, name string, versionPattern string) (
 		version, err := GetVersion(result)
 
 		if err != nil {
+			println("Didnt get valid version from:" + result)
+			println(err.String())
 			continue
 		}
 

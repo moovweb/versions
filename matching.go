@@ -1,7 +1,5 @@
 package versions
 
-import "fmt"
-
 func (p *Pattern) Less(version *Version) bool {
 	if version.Major < p.Version.Major {
 		return true
@@ -45,25 +43,18 @@ func (p *Pattern) Pessimistic(version *Version) bool {
 }
 
 func (p *Pattern) Greater(version *Version) bool {
-	fmt.Printf("%v > %v ? ", version.String(), p.Version.String())
-
-
 	if version.Major > p.Version.Major {
-		println("yes")
 		return true
 	} else if version.Major == p.Version.Major {
 		if version.Minor > p.Version.Minor {
-			println("yes")
 			return true
 		} else if version.Minor == p.Version.Minor {
 			if version.Patch > p.Version.Patch {
-				println("yes")
 				return true
 			}
 		}
 	}
 
-	println("nope")	
 	return false
 }
 
