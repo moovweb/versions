@@ -36,3 +36,22 @@
     name: "jabberwocky"
     version: "~> 0.4.100"
   output: 
+-
+  name: "Less"
+  description: "Get all less than the version"
+  input:
+    name: "bandersnatch"
+    version: "< 2.4.63"
+  output: 
+    - test/files/bandersnatch-0.0.0.fib
+    - test/files/bandersnatch-0.0.fib
+    - test/files/bandersnatch-0.2.0.fib
+    - test/files/bandersnatch-0.2.111.fib
+    - test/files/bandersnatch-2.0.1.fib
+-
+  name: "Less Control (hah)"
+  description: "Shouldn't match"
+  input:
+    name: "bandersnatch"
+    version: "< 0.0"
+  output: 
