@@ -2,15 +2,33 @@ package versions
 
 import(
 	"strings"
-	"strconv"
+	"bytes"
 	)
 
 
 type trimmer struct {
 	foundDot bool
+	maxRune int
+	minRune int
+}
+
+func newTrimmer() *trimmer {
+	minRunes := bytes.Runes([]byte("0"))
+	minRune := minRunes[0]
+
+	maxRunes := bytes.Runes([]byte("9"))
+	maxRune := maxRunes[0]
+
+	return &trimmer{
+	foundDot: false,
+	minRune:minRune,
+	maxRune:maxRune,
+	}
 }
 
 func (t *trimmer) trimExtension(rune int) bool {
+
+	//fmt.Printf("Rune: %v : %v\n", rune, string(rune))
 
 	if t.foundDot {
 		return false
@@ -21,10 +39,9 @@ func (t *trimmer) trimExtension(rune int) bool {
 		return true
 	}
 
-	min, _ := strconv.Atoi("0")
-	max, _ := strconv.Atoi("9")
+	//fmt.Printf("Min: %v  Max: %v\n", t.minRune, t.maxRune)
 
-	if rune <= max && rune >= min {
+	if rune <= t.maxRune && rune >= t.minRune {
 		return false
 	}
 
@@ -32,9 +49,6 @@ func (t *trimmer) trimExtension(rune int) bool {
 }
 
 func trimExtension(raw string) string {
-	t := &trimmer{
-		foundDot: false,
-	}
-	
+	t := newTrimmer()	
 	return strings.TrimRightFunc(raw, func (rune int) bool { return t.trimExtension(rune) } )	
 }

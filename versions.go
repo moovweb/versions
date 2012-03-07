@@ -4,7 +4,6 @@ import(
 	"os"
 	"strings"
 	"strconv"
-	"fmt"
 	)
 
 type Version struct{
