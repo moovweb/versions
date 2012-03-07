@@ -55,3 +55,59 @@
     name: "bandersnatch"
     version: "< 0.0"
   output: 
+-
+  name: "Less or Equal"
+  description: "Get all less than or equal to the version"
+  input:
+    name: "bandersnatch"
+    version: "<= 2.0.1"
+  output: 
+    - test/files/bandersnatch-0.0.0.fib
+    - test/files/bandersnatch-0.0.fib
+    - test/files/bandersnatch-0.2.0.fib
+    - test/files/bandersnatch-0.2.111.fib
+    - test/files/bandersnatch-2.0.1.fib
+-
+  name: "Less or Equal Control"
+  description: "Shouldn't match"
+  input:
+    name: "bandersnatch"
+    version: "<= 0.0"
+  output: 
+     - test/files/bandersnatch-0.0.0.fib
+     - test/files/bandersnatch-0.0.fib
+-
+  name: "Greater"
+  description: "Get all greater than the version"
+  input:
+    name: "bandersnatch"
+    version: "> 0.2"
+  output: 
+    - test/files/bandersnatch-0.2.111.fib
+    - test/files/bandersnatch-2.0.1.fib
+    - test/files/bandersnatch-3.0.fib
+-
+  name: "Greater Control (hah)"
+  description: "Shouldn't match"
+  input:
+    name: "bandersnatch"
+    version: "> 4.0.0"
+  output: 
+-
+  name: "Greater or equal"
+  description: "Get all greater than or equal to the version"
+  input:
+    name: "bandersnatch"
+    version: ">= 0.2"
+  output: 
+    - test/files/bandersnatch-0.2.0.fib
+    - test/files/bandersnatch-0.2.111.fib
+    - test/files/bandersnatch-2.0.1.fib
+    - test/files/bandersnatch-3.0.fib
+-
+  name: "Greater or Equal Control"
+  description: "Shouldn't match"
+  input:
+    name: "bandersnatch"
+    version: ">= 4.0.0"
+  output: 
