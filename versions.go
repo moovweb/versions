@@ -7,9 +7,9 @@ import(
 	)
 
 type Version struct{
-	Major *int
-	Minor *int
-	Patch *int
+	Major int
+	Minor int
+	Patch int
 }
 
 func NewVersion(rawVersions string) (*Version, os.Error) {
@@ -44,9 +44,9 @@ func NewVersion(rawVersions string) (*Version, os.Error) {
 	}
 	
 	return &Version{
-	Major: &majorVersion,
-	Minor: &minorVersion,
-	Patch: &patchVersion,
+	Major: majorVersion,
+	Minor: minorVersion,
+	Patch: patchVersion,
 	}, nil
 }
 
@@ -67,47 +67,33 @@ func GetVersion(fullName string) (*Version, os.Error){
 	return NewVersion(strings.Join(versions[:3], "."))
 }
 
-func (v *Version) Matches(pattern string) (bool) {
+// TODO(SJ) : Support a slice of patterns
+func (v *Version) Matches(pattern string) (match bool, err os.Error) {
 	if len(pattern) == 0 {
-		return true
+		return true, nil
 	}
 	
-	// TODO(SJ) : Put actual version pattern matching here
+	p, err := NewPattern(pattern)
 	
-	
-
-	return false
-}
-
-func (v *Version) NewerThan(otherVersion *Version) (bool) {
-	if *v.Major > *otherVersion.Major {
-		return true
-	} else if *v.Major == *otherVersion.Major {
-		if *v.Minor > *otherVersion.Minor {
-			return true
-		} else if *v.Minor == *otherVersion.Minor {
-			if *v.Patch > *otherVersion.Patch {
-				return true
-			}
-		}
+	if err != nil {
+		return false, err
 	}
 	
-	return false
-}
+	match = p.Match(v)
 
-func (v *Version) Equals(otherVersion *Version) (bool) {
-	return *v.Major == *otherVersion.Major && *v.Minor == *otherVersion.Minor && *v.Patch == *otherVersion.Patch
+	return
 }
 
 func (v *Version) String() (string) {
 	var output string
 
-	output += strconv.Itoa(*v.Major)
-	output += "." + strconv.Itoa(*v.Minor)
+	output += strconv.Itoa(v.Major)
+	output += "." + strconv.Itoa(v.Minor)
 
-	if v.Patch != nil {
-		output += "." + strconv.Itoa(*v.Patch)
-	}
+	// Patch level is auto-populated for now
+	//	if v.Patch != nil {
+	output += "." + strconv.Itoa(v.Patch)
+	//	}
 
 	return output
 }

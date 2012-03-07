@@ -32,7 +32,6 @@ const(
 var LiteralToOperator map[string]int
 var OperatorMapInitialized bool
 
-
 func initializeOperatorMap() {
 	if OperatorMapInitialized {
 		return
@@ -80,4 +79,25 @@ func parse(value string) (p *Pattern, err os.Error) {
 	p.Version = version			
 	
 	return
+}
+
+func (p *Pattern) Match(version *Version) bool {
+	var result bool
+
+	switch(p.Operator.Type) {
+	case LESS:
+		result = p.Less(version)
+	case LESS_EQUAL:
+		result = p.LessEqual(version)
+	case EQUAL:
+		result = p.Equal(version)
+	case PESSIMISTIC:
+		result = p.Pessimistic(version)
+	case GREATER_EQUAL:
+		result = p.GreaterEqual(version)
+	case GREATER:
+		result = p.Greater(version)
+	}
+
+	return result
 }

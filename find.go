@@ -13,16 +13,23 @@ type FilePath struct{
 
 
 func FindByName(rootPath string, subPath string, name string) (*FilePath, os.Error){
-	filePaths := FindByNameAndVersion(rootPath, subPath, name, "")
+	filePaths, err := FindByNameAndVersion(rootPath, subPath, name, "")
 	
+	if err != nil {
+		return nil, err
+	}
+
 	if len(filePaths) == 0 {
 		return nil, os.NewError("Found no files named " + name + " in path: " + rootPath)
 	}
 
 	newestFilePath := filePaths[0]
 	
+
 	for _, thisFilePath := range(filePaths) {
-		if thisFilePath.Version.NewerThan(newestFilePath.Version) {
+		pattern, _ := NewPattern("> " + newestFilePath.Version.String() )
+
+		if pattern.Match(thisFilePath.Version) {
 			newestFilePath = thisFilePath
 		}
 	}
@@ -30,7 +37,7 @@ func FindByName(rootPath string, subPath string, name string) (*FilePath, os.Err
 	return newestFilePath, nil
 }
 
-func FindByNameAndVersion(rootPath string, subPath string, name string, versionPattern string) (paths []*FilePath) {
+func FindByNameAndVersion(rootPath string, subPath string, name string, versionPattern string) (paths []*FilePath, err os.Error) {
 	path := filepath.Join(rootPath, subPath)
 	query := filepath.Join(path, name) + "*"
 	results, _ := filepath.Glob(query)
@@ -38,17 +45,25 @@ func FindByNameAndVersion(rootPath string, subPath string, name string, versionP
 	for _, result := range(results) {
 		version, err := GetVersion(result)
 
-		if err == nil {
-			if version.Matches(versionPattern) {
-				matchingPath := &FilePath{
-				Path: result,
-				Name: name,
-				Version: version,
-				}
-				paths = append(paths, matchingPath)
+		if err != nil {
+			return nil, err
+		}
+
+		matched, err := version.Matches(versionPattern)
+		
+		if err != nil {
+			return nil, err
+		}
+
+		if matched {
+			matchingPath := &FilePath{
+			Path: result,
+			Name: name,
+			Version: version,
 			}
+			paths = append(paths, matchingPath)
 		}
 	}
 
-	return paths
+	return
 }

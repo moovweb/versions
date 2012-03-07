@@ -1,1 +1,6 @@
 - Accept multiple pattern strings
+- Fix edge cases:
+  - A major minor version `0.3` will be zero'd out to `0.3.0`
+  - This is fine, except with the pessimistic operator
+- Don't assume spaces are provided. Accept `>4.5.6` as a pattern
+- Add command line interface
