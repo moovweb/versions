@@ -6,3 +6,6 @@
 - Add command line interface
 - Auto sort any arrays of results?
 - Can I auto expand tilde on the command line: `versions ~/somedir` ?
+- Searching by name is a bit too loose. If I search 'foo' it matches 'foobar'
+- Support no names, just raw version strings '0.0.45'
+- When searching by name I return the newest result. Add a "*" pattern to return all matching filepaths for that name
