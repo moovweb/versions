@@ -1,0 +1,16 @@
+---
+-
+  name: "Find by Name"
+  description: "Finds the newest mixer given a path and name"
+  input:
+    name: "jabberwocky"
+  output: 
+    - test/files/jabberwocky-1.0.345.fib
+-
+  name: "Pessimistic"
+  description: "Finds newest mixer given a path / name and limits it to the given minor number."
+  input:
+    name: "jabberwocky"
+    version: "~> 1.0.200"
+  output: 
+    - test/files/jabberwocky-1.0.345.fib

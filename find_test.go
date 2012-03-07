@@ -4,7 +4,6 @@ import(
 	"testing"
 	yaml "goyaml"
 	"io/ioutil"
-	"path/filepath"
 	"strings"
 	"os"
 	"fmt"
@@ -13,12 +12,15 @@ import(
 const TestFilesPath = "test/files"
 
 func TestFind(t *testing.T) {
-	testPath := "test/tests"
-	tests, err := ioutil.ReadDir(testPath)
+	rawTests, err := ioutil.ReadFile("test/find_tests.yml")
 
 	if err != nil {
-		t.Errorf("Couldn't read tests directory:\n%v", err.String() )
+		t.Errorf("Couldn't read tests:\n%v", err.String() )
 	}
+
+	tests := make([]interface{},0)
+
+	yaml.Unmarshal(rawTests, &tests)
 
 	globalPass := true
 	errors := make([]string,0)
@@ -26,7 +28,7 @@ func TestFind(t *testing.T) {
 	for _, testInfo := range(tests) {
 		pass := true
 		var error string
-		test, err := LoadTest(filepath.Join(testPath, testInfo.Name))
+		test, err := LoadTest(testInfo)
 
 		if err != nil {
 			pass = false
@@ -58,15 +60,16 @@ func TestFind(t *testing.T) {
 
 type Test struct {
 	Name string
-	Input map[string]string
-	ExpectedOutput []string
+	Description string
+	Input map[interface{}]interface{}
+	ExpectedOutput []interface{}
 }
 
 func (t *Test) Run() (pass bool, error string) {
 	paths := make([]*FilePath, 0)
 
-	if len(t.Input["versions"]) == 0 {
-		path, err := FindByName(TestFilesPath, t.Input["name"])
+	if t.Input["versions"] == nil {
+		path, err := FindByName(TestFilesPath, t.Input["name"].(string))
 
 		if err != nil {
 			return false, err.String()
@@ -74,7 +77,7 @@ func (t *Test) Run() (pass bool, error string) {
 
 		paths = append(paths, path)
 	} else {
-		newPaths, err := FindByNameAndVersion(TestFilesPath, t.Input["name"], t.Input["version"])
+		newPaths, err := FindByNameAndVersion(TestFilesPath, t.Input["name"].(string), t.Input["version"].(string))
 
 		if err != nil {
 			return false, err.String()
@@ -90,13 +93,14 @@ func (t *Test) Validate(output []*FilePath) (pass bool, error string){
 	pass = true
 	errors := ""
 
-	for index, expectedPath := range(t.ExpectedOutput) {
+	for index, rawExpectedPath := range(t.ExpectedOutput) {
+		expectedPath := rawExpectedPath.(string)
 		resultFilePath := output[index]
 		resultPath := resultFilePath.Path
 
 		if expectedPath != resultPath {
 			pass = false
-			errors += fmt.Sprintf("%v\n==========\nInput:\t\tname : (%v), version : (%v)\nExpected:\t%v\nGot:\t\t%v\n", t.Name, t.Input["name"], t.Input["version"], expectedPath, resultPath)
+			errors += fmt.Sprintf("%v\n==========\n%v\n----------\nInput:\t\tname : (%v), version : (%v)\nExpected:\t%v\nGot:\t\t%v\n", t.Name, t.Description, t.Input["name"].(string), t.Input["version"].(string), expectedPath, resultPath)
 		}
 	}
 
@@ -104,29 +108,18 @@ func (t *Test) Validate(output []*FilePath) (pass bool, error string){
 }
 
 
-func LoadTest(path string) (*Test, os.Error) {
-	data, err := ioutil.ReadFile( filepath.Join(path, "input.yml") )
+func LoadTest(rawTest interface{}) (*Test, os.Error) {
+	test := rawTest.(map[interface{}]interface{})
 
-	if err != nil {
-		return nil, err
-	}
+	input := make( map[interface{}]interface{} )
+	input = test["input"].(map[interface{}]interface{})
 
-	input := make( map[string]string )
-	yaml.Unmarshal(data, &input)
-
-	data, err = ioutil.ReadFile( filepath.Join(path, "output.yml") )
-
-	if err != nil {
-		return nil, err
-	}
-
-	output := make( []string, 0)
-	yaml.Unmarshal(data, &output)
-	
-	_, name := filepath.Split(path)
+	output := make( []interface{}, 0)
+	output = test["output"].([]interface{})
 
 	return &Test{
-	Name: name,
+	Name: test["name"].(string),
+	Description: test["description"].(string),
 	Input: input,
 	ExpectedOutput: output,
 	}, nil
