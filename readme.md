@@ -2,6 +2,20 @@
 
 Search for versioned filenames by version patterns.
 
+# Go Library Interface #
+
+    version.FindByName("/home/garfield/.rvm/gems/ruby-1.9.2-p180/", "nokogiri")
+
+    version.FindByNameAndVersion("/home/garfield/.rvm/gems/ruby-1.9.2-p180/", "nokogiri", "~> 1.4.2")
+
+
+# Command Line Interface #
+
+    version /home/garfield/.rvm/gems/ruby-1.9.2-p180/ nokogiri
+
+    version /home/garfield/.rvm/gems/ruby-1.9.2-p180/ nokogiri "~> 1.4.2"
+
+
 # License #
 
 Copyright (C) 2012 Sean Jezewski / Moovweb
