@@ -1,16 +1,40 @@
 ---
 -
   name: "Find by Name"
-  description: "Finds the newest mixer given a path and name"
+  description: "Finds the newest file given a path and name"
   input:
     name: "jabberwocky"
   output: 
     - test/files/jabberwocky-1.0.345.fib
 -
-  name: "Pessimistic"
-  description: "Finds newest mixer given a path / name and limits it to the given minor number."
+  name: "Equals"
+  description: "Should only get exact match"
   input:
     name: "jabberwocky"
-    version: "~> 1.0.200"
+    version: "0.4.63"
   output: 
-    - test/files/jabberwocky-1.0.345.fib
+    - test/files/jabberwocky-0.4.63.fib
+-
+  name: "Equals Control"
+  description: "Shouldn't match"
+  input:
+    name: "jabberwocky"
+    version: "0.4.333"
+  output: 
+    - ""
+-
+  name: "Pessimistic"
+  description: "Finds newest file given a path / name and limits it to the given minor number."
+  input:
+    name: "jabberwocky"
+    version: "~> 0.4.1"
+  output: 
+    - test/files/jabberwocky-0.4.63.fib
+-
+  name: "Pessimistic Control"
+  description: "Shouldn't find any results."
+  input:
+    name: "jabberwocky"
+    version: "~> 0.4.100"
+  output: 
+    - test/files/jabberwocky-0.4.300.fibx

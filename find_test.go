@@ -52,7 +52,7 @@ func TestFind(t *testing.T) {
 	if globalPass {
 		println("All tests passed!")
 	} else {
-		t.Errorf("Some tests failed! See error output:\n\n%v\n", strings.Join(errors,"--\n"))
+		t.Errorf("Some tests failed! See error output:\n\n%v\n", strings.Join(errors,"\n\n"))
 	}
 	
 }
