@@ -6,7 +6,6 @@ import(
 	)
 
 type Pattern struct {
-	Value string
 	Operator *Operator
 	Version *Version
 }
@@ -15,12 +14,19 @@ type Operator struct {
 	Type int
 }
 
+func NewOperator(tipe int) *Operator {
+	return &Operator{
+	Type: tipe,
+	}
+}
+
 const(
-	EQUAL = iota
-	LESS
+	LESS = iota
 	LESS_EQUAL
-	GREATER
+	EQUAL
+	PESSIMISTIC
 	GREATER_EQUAL
+	GREATER
 )
 
 var LiteralToOperator map[string]int
@@ -33,42 +39,45 @@ func initializeOperatorMap() {
 	}
 
 	LiteralToOperator = map[string] int{
-		">": GREATER,
+		"<": LESS,
+		"<=": LESS_EQUAL,
+		"~>": PESSIMISTIC,
 		"=": EQUAL,
+		">=": GREATER_EQUAL,
+		">": GREATER,
 	}
 	
 	OperatorMapInitialized = true
 }
 
-func NewPattern(value string) *Pattern{
+func NewPattern(value string) (p *Pattern, err os.Error) {
 	value = strings.TrimLeft(value, " \r\n")
 	value = strings.TrimRight(value, " \r\n")
 
-	p := &Pattern{
-	Value: value,
-	}
+	p, err = parse(value)
 
-	p.parse()
-
-	return p
+	return
 }
 
 
-func (p *Pattern) parse() (err os.Error) {
-	tokens := strings.Split(p.Value, " ")
+func parse(value string) (p *Pattern, err os.Error) {
+	tokens := strings.Split(value, " ")
+	rawValue := value
+
+	p = &Pattern{}
 
 	if len(tokens) > 1 {
-		
-	} else {
-		version, err := NewVersion(p.Value)
-
-		if err != nil {
-			return err
-		}
-
-		p.Version = version			
-
+		p.Operator = NewOperator( LiteralToOperator[tokens[0]] )
+		rawValue = tokens[1]
 	}
+
+	version, err := NewVersion(rawValue)
+
+	if err != nil {
+		return nil, err
+	}
+
+	p.Version = version			
 	
-	return nil
+	return
 }
