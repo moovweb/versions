@@ -3,6 +3,7 @@ package versions
 import(
 	"os"
 	"path/filepath"
+	"fmt"
 	)
 
 type FilePath struct{
@@ -12,8 +13,8 @@ type FilePath struct{
 }
 
 
-func FindByName(rootPath string, subPath string, name string) (*FilePath, os.Error){
-	filePaths, err := FindByNameAndVersion(rootPath, subPath, name, "")
+func FindByName(rootPath string, name string) (*FilePath, os.Error){
+	filePaths, err := FindByNameAndVersion(rootPath, name, "")
 	
 	if err != nil {
 		return nil, err
@@ -29,7 +30,10 @@ func FindByName(rootPath string, subPath string, name string) (*FilePath, os.Err
 	for _, thisFilePath := range(filePaths) {
 		pattern, _ := NewPattern("> " + newestFilePath.Version.String() )
 
+		fmt.Printf("Newest pattern:%v\n", pattern)
+
 		if pattern.Match(thisFilePath.Version) {
+			fmt.Printf("Version %v is newer than %v\n", thisFilePath.Version.String(), newestFilePath.Version.String())
 			newestFilePath = thisFilePath
 		}
 	}
@@ -37,16 +41,16 @@ func FindByName(rootPath string, subPath string, name string) (*FilePath, os.Err
 	return newestFilePath, nil
 }
 
-func FindByNameAndVersion(rootPath string, subPath string, name string, versionPattern string) (paths []*FilePath, err os.Error) {
-	path := filepath.Join(rootPath, subPath)
-	query := filepath.Join(path, name) + "*"
+func FindByNameAndVersion(rootPath string, name string, versionPattern string) (paths []*FilePath, err os.Error) {
+
+	query := filepath.Join(rootPath, name) + "*"
 	results, _ := filepath.Glob(query)
 	
 	for _, result := range(results) {
 		version, err := GetVersion(result)
 
 		if err != nil {
-			return nil, err
+			continue
 		}
 
 		matched, err := version.Matches(versionPattern)
@@ -66,4 +70,9 @@ func FindByNameAndVersion(rootPath string, subPath string, name string, versionP
 	}
 
 	return
+}
+
+func (fp *FilePath) String() string {
+	// TODO(SJ) -- support any extension and save the actual filename!
+	return fp.Path
 }

@@ -3,6 +3,7 @@ package versions
 import(
 	"strings"
 	"os"
+	"fmt"
 	)
 
 type Pattern struct {
@@ -83,6 +84,8 @@ func parse(value string) (p *Pattern, err os.Error) {
 
 func (p *Pattern) Match(version *Version) bool {
 	var result bool
+
+	fmt.Printf("PAttern type: %v\n",p.Operator.Type)
 
 	switch(p.Operator.Type) {
 	case LESS:

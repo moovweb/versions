@@ -4,3 +4,5 @@
   - This is fine, except with the pessimistic operator
 - Don't assume spaces are provided. Accept `>4.5.6` as a pattern
 - Add command line interface
+- Auto sort any arrays of results?
+- Can I auto expand tilde on the command line: `versions ~/somedir` ?
