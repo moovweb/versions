@@ -4,12 +4,12 @@ Search for versioned filenames by version patterns.
 
 ## Viable Patterns ##
 
-Less Than :         "> 0.4.5"
-Less or Equals :    ">= 0.4.5"
-Equals :            "= 0.4.5" or "0.4.5"
-Pessimistic :       "~> 0.3.45"
-Greater or Equals : ">= 0.4.5"
-Greater Than :      "> 0.4.5"
+    Less Than :         "> 0.4.5"
+    Less or Equals :    ">= 0.4.5"
+    Equals :            "= 0.4.5" or "0.4.5"
+    Pessimistic :       "~> 0.3.45"
+    Greater or Equals : ">= 0.4.5"
+    Greater Than :      "> 0.4.5"
 
 
 # Go Library Interface #
