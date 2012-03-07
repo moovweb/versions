@@ -57,6 +57,7 @@ func TestFind(t *testing.T) {
 
 
 type Test struct {
+	Name string
 	Input map[string]string
 	ExpectedOutput []string
 }
@@ -95,7 +96,7 @@ func (t *Test) Validate(output []*FilePath) (pass bool, error string){
 
 		if expectedPath != resultPath {
 			pass = false
-			errors += fmt.Sprintf("Input:\t\tname : (%v), version : (%v)\nExpected:\t%v\nGot:\t\t%v\n", t.Input["name"], t.Input["version"], expectedPath, resultPath)
+			errors += fmt.Sprintf("%v\n==========\nInput:\t\tname : (%v), version : (%v)\nExpected:\t%v\nGot:\t\t%v\n", t.Name, t.Input["name"], t.Input["version"], expectedPath, resultPath)
 		}
 	}
 
@@ -122,7 +123,10 @@ func LoadTest(path string) (*Test, os.Error) {
 	output := make( []string, 0)
 	yaml.Unmarshal(data, &output)
 	
+	_, name := filepath.Split(path)
+
 	return &Test{
+	Name: name,
 	Input: input,
 	ExpectedOutput: output,
 	}, nil

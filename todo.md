@@ -2,6 +2,7 @@
 - Fix edge cases:
   - A major minor version `0.3` will be zero'd out to `0.3.0`
   - This is fine, except with the pessimistic operator
+  - Well, I should treat '0.0' unique from '0.0.0'
 - Don't assume spaces are provided. Accept `>4.5.6` as a pattern
 - Add command line interface
 - Auto sort any arrays of results?
