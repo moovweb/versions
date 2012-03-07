@@ -74,7 +74,6 @@ func (v *Version) Matches(pattern string) (match bool, err os.Error) {
 		return true, nil
 	}
 	
-	println("Making pattern from (" + pattern + ")")
 	p, err := NewPattern(pattern)
 	
 	if err != nil {

@@ -40,17 +40,18 @@ func TestFind(t *testing.T) {
 		}
 
 		if pass {
-			println(".")
+			print(".")
 		} else {
-			println("F")
+			print("F")
 			globalPass = false
 			errors = append(errors, error)
 		}
 	}
 
+	println("")
 
 	if globalPass {
-		println("All tests passed!")
+		fmt.Printf("All (%v) tests passed!\n", len(tests) )
 	} else {
 		t.Errorf("Some tests failed! See error output:\n\n%v\n", strings.Join(errors,"\n\n"))
 	}
@@ -69,7 +70,6 @@ func (t *Test) Run() (pass bool, error string) {
 	paths := make([]*FilePath, 0)
 
 	if t.Input["version"] == nil || len(t.Input["version"].(string)) == 0 {
-		println("Find by name")
 		path, err := FindByName(TestFilesPath, t.Input["name"].(string))
 
 		if err != nil {
@@ -78,7 +78,6 @@ func (t *Test) Run() (pass bool, error string) {
 
 		paths = append(paths, path)
 	} else {
-		println("Find by version")
 		newPaths, err := FindByNameAndVersion(TestFilesPath, t.Input["name"].(string), t.Input["version"].(string))
 
 		if err != nil {
@@ -96,10 +95,7 @@ func (t *Test) Validate(output []*FilePath) (pass bool, error string){
 	errors := ""
 
 	if len(t.ExpectedOutput) != len(output) {
-		fmt.Printf("# expected: %v\n", len(t.ExpectedOutput))
-		fmt.Printf("# actual: %v\n", len(output))
-
-		errors = fmt.Sprintf("%v\n==========\n%v\n----------\nInput:\t\tname : (%v), version : (%v)\nMismatched output! Differing number of output paths.\nExpected:\t%v\nGot:\t\t%v\n", t.Name, t.Description, t.Input["name"].(string), t.Input["version"].(string), t.ExpectedOutput, output)
+		errors = fmt.Sprintf("%v\n==========\n%v\n----------\nInput:\t\tname : (%v), version : (%v)\n\nMismatched output! Differing number of output paths.\n\nExpected:\t%v\nGot:\t\t%v\n", t.Name, t.Description, t.Input["name"].(string), t.Input["version"].(string), t.ExpectedOutput, output)
 
 		return false, errors
 	}
