@@ -3,6 +3,7 @@ package versions
 import(
 	"strings"
 	"os"
+	"fmt"
 	)
 
 type Pattern struct {
@@ -88,18 +89,33 @@ func parse(value string) (p *Pattern, err os.Error) {
 func (p *Pattern) Match(version *Version) bool {
 	var result bool
 
+	if p.Operator == nil {
+		// Assume equality
+		return p.Equal(version)
+
+	}
+
+	fmt.Printf("Operator type: %v\n", p.Operator.Type)
+
+
 	switch(p.Operator.Type) {
 	case LESS:
+		println("calling less")
 		result = p.Less(version)
 	case LESS_EQUAL:
+		println("calling less equal")
 		result = p.LessEqual(version)
 	case EQUAL:
+		println("calling equal")
 		result = p.Equal(version)
 	case PESSIMISTIC:
+		println("calling pessimistic")
 		result = p.Pessimistic(version)
 	case GREATER_EQUAL:
+		println("calling greater equal")
 		result = p.GreaterEqual(version)
 	case GREATER:
+		println("calling greater")
 		result = p.Greater(version)
 	}
 

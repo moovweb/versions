@@ -21,7 +21,6 @@
     name: "jabberwocky"
     version: "0.4.333"
   output: 
-    - ""
 -
   name: "Pessimistic"
   description: "Finds newest file given a path / name and limits it to the given minor number."
@@ -37,4 +36,3 @@
     name: "jabberwocky"
     version: "~> 0.4.100"
   output: 
-    - test/files/jabberwocky-0.4.300.fibx

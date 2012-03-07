@@ -1,5 +1,7 @@
 package versions
 
+import "fmt"
+
 func (p *Pattern) Less(version *Version) bool {
 	if version.Major < p.Version.Major {
 		return true
@@ -31,11 +33,15 @@ func (p *Pattern) Equal(version *Version) bool {
 func (p *Pattern) Pessimistic(version *Version) bool {
 	// TODO(SJ) !! When versions like `0.4` are zero'd out to `0.4.0` this may not behave as expected
 	
-	if version.Major > p.Version.Major || version.Minor > p.Version.Minor {
+	if version.Major != p.Version.Major || version.Minor != p.Version.Minor {
+		println("Major / Minor are too big")
+		fmt.Printf("compared to version: %v\n", version.String())
 		return false
 	}
 	
 	if version.Patch < p.Version.Patch {
+		println("Patch # is too small")
+		fmt.Printf("compared to version: %v\n", version.String())
 		return false
 	}
 
