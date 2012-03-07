@@ -1,0 +1,5 @@
+_bin
+_obj
+bin
+*.6
+command_line/versions
