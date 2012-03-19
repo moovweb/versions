@@ -4,8 +4,8 @@ import "testing"
 import "exec"
 import "bufio"
 import "fmt"
-import "rand"
-import "time"
+//import "rand"
+//import "time"
 
 func evalRuby(script string, t *testing.T) string {
 	// Find and create the command
