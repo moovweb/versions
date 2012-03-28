@@ -1,13 +1,12 @@
 package versions
 
-import(
-	"testing"
+import (
+	"fmt"
 	yaml "goyaml"
 	"io/ioutil"
 	"strings"
-	"os"
-	"fmt"
-	)
+	"testing"
+)
 
 const TestFilesPath = "test/files"
 
@@ -15,24 +14,24 @@ func TestFind(t *testing.T) {
 	rawTests, err := ioutil.ReadFile("test/find_tests.yml")
 
 	if err != nil {
-		t.Errorf("Couldn't read tests:\n%v", err.String() )
+		t.Errorf("Couldn't read tests:\n%v", err.Error())
 	}
 
-	tests := make([]interface{},0)
+	tests := make([]interface{}, 0)
 
 	yaml.Unmarshal(rawTests, &tests)
 
 	globalPass := true
-	errors := make([]string,0)
-	
-	for _, testInfo := range(tests) {
+	errors := make([]string, 0)
+
+	for _, testInfo := range tests {
 		pass := true
 		var error string
 		test, err := LoadTest(testInfo)
 
 		if err != nil {
 			pass = false
-			error = err.String()
+			error = err.Error()
 		}
 
 		if pass {
@@ -51,18 +50,17 @@ func TestFind(t *testing.T) {
 	println("")
 
 	if globalPass {
-		fmt.Printf("All (%v) tests passed!\n", len(tests) )
+		fmt.Printf("All (%v) tests passed!\n", len(tests))
 	} else {
-		t.Errorf("Some tests failed! See error output:\n\n%v\n", strings.Join(errors,"\n\n"))
+		t.Errorf("Some tests failed! See error output:\n\n%v\n", strings.Join(errors, "\n\n"))
 	}
-	
+
 }
 
-
 type Test struct {
-	Name string
-	Description string
-	Input map[interface{}]interface{}
+	Name           string
+	Description    string
+	Input          map[interface{}]interface{}
 	ExpectedOutput []interface{}
 }
 
@@ -73,7 +71,7 @@ func (t *Test) Run() (pass bool, error string) {
 		path, err := FindByName(TestFilesPath, t.Input["name"].(string))
 
 		if err != nil {
-			return false, err.String()
+			return false, err.Error()
 		}
 
 		paths = append(paths, path)
@@ -81,7 +79,7 @@ func (t *Test) Run() (pass bool, error string) {
 		newPaths, err := FindByNameAndVersion(TestFilesPath, t.Input["name"].(string), t.Input["version"].(string))
 
 		if err != nil {
-			return false, err.String()
+			return false, err.Error()
 		}
 
 		paths = newPaths
@@ -90,7 +88,7 @@ func (t *Test) Run() (pass bool, error string) {
 	return t.Validate(paths)
 }
 
-func (t *Test) Validate(output []*FilePath) (pass bool, error string){
+func (t *Test) Validate(output []*FilePath) (pass bool, error string) {
 	pass = true
 	errors := ""
 
@@ -100,7 +98,7 @@ func (t *Test) Validate(output []*FilePath) (pass bool, error string){
 		return false, errors
 	}
 
-	for index, rawExpectedPath := range(t.ExpectedOutput) {
+	for index, rawExpectedPath := range t.ExpectedOutput {
 		expectedPath := rawExpectedPath.(string)
 		resultFilePath := output[index]
 		resultPath := resultFilePath.Path
@@ -114,23 +112,22 @@ func (t *Test) Validate(output []*FilePath) (pass bool, error string){
 	return pass, errors
 }
 
-
-func LoadTest(rawTest interface{}) (*Test, os.Error) {
+func LoadTest(rawTest interface{}) (*Test, error) {
 	test := rawTest.(map[interface{}]interface{})
 
-	input := make( map[interface{}]interface{} )
+	input := make(map[interface{}]interface{})
 	input = test["input"].(map[interface{}]interface{})
 
-	output := make( []interface{}, 0)
+	output := make([]interface{}, 0)
 
 	if test["output"] != nil {
 		output = test["output"].([]interface{})
 	}
 
 	return &Test{
-	Name: test["name"].(string),
-	Description: test["description"].(string),
-	Input: input,
-	ExpectedOutput: output,
+		Name:           test["name"].(string),
+		Description:    test["description"].(string),
+		Input:          input,
+		ExpectedOutput: output,
 	}, nil
 }

@@ -1,25 +1,25 @@
 package versions
 
-import(
-	"os"
-	"strings"
+import (
+	"errors"
 	"strconv"
-	)
+	"strings"
+)
 
-type Version struct{
+type Version struct {
 	Major int
 	Minor int
 	Patch int
 }
 
-func NewVersion(rawVersions string) (*Version, os.Error) {
+func NewVersion(rawVersions string) (*Version, error) {
 	rawVersions = strings.Trim(rawVersions, "\r\n ")
 	rawVersions = trimExtension(rawVersions)
 
 	versions := strings.Split(rawVersions, ".")
-	
+
 	if len(versions) < 2 {
-		return nil, os.NewError("Invalid version string(" + rawVersions + "). Must be of the form x.x or x.x.x")
+		return nil, errors.New("Invalid version string(" + rawVersions + "). Must be of the form x.x or x.x.x")
 	}
 
 	majorVersion, err := strconv.Atoi(versions[0])
@@ -43,49 +43,49 @@ func NewVersion(rawVersions string) (*Version, os.Error) {
 			return nil, err
 		}
 	}
-	
+
 	return &Version{
-	Major: majorVersion,
-	Minor: minorVersion,
-	Patch: patchVersion,
+		Major: majorVersion,
+		Minor: minorVersion,
+		Patch: patchVersion,
 	}, nil
 }
 
-func GetVersion(fullName string) (*Version, os.Error){
-	
+func GetVersion(fullName string) (*Version, error) {
+
 	segments := strings.Split(fullName, "-")
 
 	if len(segments) < 2 {
-		return nil, os.NewError("Invalid fullname. No version suffix found")
+		return nil, errors.New("Invalid fullname. No version suffix found")
 	}
-	
+
 	versions := strings.SplitN(segments[len(segments)-1], ".", 4)
 
 	if len(versions) < 3 {
-		return nil, os.NewError("Invalid fullname. No minor version or patch version found")
-	}	
-		
+		return nil, errors.New("Invalid fullname. No minor version or patch version found")
+	}
+
 	return NewVersion(strings.Join(versions[:3], "."))
 }
 
 // TODO(SJ) : Support a slice of patterns
-func (v *Version) Matches(pattern string) (match bool, err os.Error) {
+func (v *Version) Matches(pattern string) (match bool, err error) {
 	if len(pattern) == 0 {
 		return true, nil
 	}
-	
+
 	p, err := NewPattern(pattern)
-	
+
 	if err != nil {
 		return false, err
 	}
-	
+
 	match = p.Match(v)
 
 	return
 }
 
-func (v *Version) String() (string) {
+func (v *Version) String() string {
 	var output string
 
 	output += strconv.Itoa(v.Major)

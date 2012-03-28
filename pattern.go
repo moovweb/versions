@@ -1,13 +1,10 @@
 package versions
 
-import(
-	"strings"
-	"os"
-	)
+import "strings"
 
 type Pattern struct {
 	Operator *Operator
-	Version *Version
+	Version  *Version
 }
 
 type Operator struct {
@@ -16,11 +13,11 @@ type Operator struct {
 
 func NewOperator(tipe int) *Operator {
 	return &Operator{
-	Type: tipe,
+		Type: tipe,
 	}
 }
 
-const(
+const (
 	LESS = iota
 	LESS_EQUAL
 	EQUAL
@@ -37,19 +34,19 @@ func initializeOperatorMap() {
 		return
 	}
 
-	LiteralToOperator = map[string] int{
-		"<": LESS,
+	LiteralToOperator = map[string]int{
+		"<":  LESS,
 		"<=": LESS_EQUAL,
 		"~>": PESSIMISTIC,
-		"=": EQUAL,
+		"=":  EQUAL,
 		">=": GREATER_EQUAL,
-		">": GREATER,
+		">":  GREATER,
 	}
-	
+
 	OperatorMapInitialized = true
 }
 
-func NewPattern(value string) (p *Pattern, err os.Error) {
+func NewPattern(value string) (p *Pattern, err error) {
 	if !OperatorMapInitialized {
 		initializeOperatorMap()
 	}
@@ -62,15 +59,14 @@ func NewPattern(value string) (p *Pattern, err os.Error) {
 	return
 }
 
-
-func parse(value string) (p *Pattern, err os.Error) {
+func parse(value string) (p *Pattern, err error) {
 	tokens := strings.Split(value, " ")
 	rawValue := value
 
 	p = &Pattern{}
 
 	if len(tokens) > 1 {
-		p.Operator = NewOperator( LiteralToOperator[tokens[0]] )
+		p.Operator = NewOperator(LiteralToOperator[tokens[0]])
 		rawValue = tokens[1]
 	}
 
@@ -80,8 +76,8 @@ func parse(value string) (p *Pattern, err os.Error) {
 		return nil, err
 	}
 
-	p.Version = version			
-	
+	p.Version = version
+
 	return
 }
 
@@ -94,7 +90,7 @@ func (p *Pattern) Match(version *Version) bool {
 
 	}
 
-	switch(p.Operator.Type) {
+	switch p.Operator.Type {
 	case LESS:
 		result = p.Less(version)
 	case LESS_EQUAL:
