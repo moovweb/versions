@@ -1,9 +1,10 @@
 package versions
 
 import "testing"
-import "exec"
+import "os/exec"
 import "bufio"
 import "fmt"
+
 //import "rand"
 //import "time"
 
@@ -73,7 +74,7 @@ func checkNewVersion(version string, t *testing.T) {
 
 func checkMatcher(version string, matcher string, t *testing.T) {
 	// Test the truth of a matcher
-	ruby := "Gem::Requirement.new(\""+matcher+"\").satisfied_by?Gem::Version.new(\""+version+"\")"
+	ruby := "Gem::Requirement.new(\"" + matcher + "\").satisfied_by?Gem::Version.new(\"" + version + "\")"
 	ruby_output := evalRuby(ruby, t)
 	go_output, err := NewVersion(version)
 	if err != nil {
@@ -158,4 +159,3 @@ func TestNewVersion(t *testing.T) {
 	//checkNewVersion("0.0.src", t)
 	//checkNewVersion("0.src.0", t)
 }
-

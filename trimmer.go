@@ -8,8 +8,8 @@ import(
 
 type trimmer struct {
 	foundDot bool
-	maxRune int
-	minRune int
+	maxRune rune
+	minRune rune
 }
 
 func newTrimmer() *trimmer {
@@ -26,7 +26,7 @@ func newTrimmer() *trimmer {
 	}
 }
 
-func (t *trimmer) trimExtension(rune int) bool {
+func (t *trimmer) trimExtension(rune rune) bool {
 
 	//fmt.Printf("Rune: %v : %v\n", rune, string(rune))
 
@@ -50,5 +50,5 @@ func (t *trimmer) trimExtension(rune int) bool {
 
 func trimExtension(raw string) string {
 	t := newTrimmer()	
-	return strings.TrimRightFunc(raw, func (rune int) bool { return t.trimExtension(rune) } )	
+	return strings.TrimRightFunc(raw, func (rune rune) bool { return t.trimExtension(rune) } )	
 }

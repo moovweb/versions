@@ -24,7 +24,7 @@ func main() {
 		path, err := versions.FindByName(args[1], args[2])
 
 		if err != nil {
-			println("Error searching for files:\n" + err.String())
+			println("Error searching for files:\n" + err.Error())
 		}
 
 		paths = append(paths, path)
@@ -32,7 +32,7 @@ func main() {
 		newPaths, err := versions.FindByNameAndVersion(args[1], args[2], args[3])
 
 		if err != nil {
-			println("Error searching for files:\n" + err.String())
+			println("Error searching for files:\n" + err.Error())
 		}
 		
 		paths = newPaths
