@@ -90,7 +90,7 @@ func checkMatcher(version string, matcher string, t *testing.T) {
 	}
 }
 
-func disableTestNewVersion(t *testing.T) {
+func TestNewVersion(t *testing.T) {
 	/*checkNewVersion("0.0.0", t)
 
 	rand.Seed(time.Nanoseconds())
