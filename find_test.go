@@ -11,7 +11,7 @@ import(
 
 const TestFilesPath = "test/files"
 
-func disabledTestFind(t *testing.T) {
+func TestFind(t *testing.T) {
 	rawTests, err := ioutil.ReadFile("test/find_tests.yml")
 
 	if err != nil {
