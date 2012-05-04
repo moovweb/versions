@@ -1,9 +1,0 @@
-all: install
-install:
-	gb -i
-build:
-	gb -b
-clean:
-	gb -c
-test:
-	echo "DO NOTHING!"
