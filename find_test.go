@@ -5,6 +5,7 @@ import (
 	yaml "goyaml"
 	"io/ioutil"
 	"strings"
+	"runtime"
 	"testing"
 )
 
