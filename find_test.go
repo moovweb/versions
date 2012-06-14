@@ -11,6 +11,9 @@ import (
 const TestFilesPath = "test/files"
 
 func TestFind(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		return
+	}
 	rawTests, err := ioutil.ReadFile("test/find_tests.yml")
 
 	if err != nil {
