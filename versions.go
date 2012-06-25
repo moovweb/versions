@@ -98,3 +98,20 @@ func (v *Version) String() string {
 
 	return output
 }
+
+func (v *Version) Compare(rawVersion string) int {
+	v2, err := NewVersion(rawVersion)
+	if err != nil {
+		return 1
+	}
+
+	if v.Major != v2.Major {
+		return v.Major - v2.Major
+	}
+
+	if v.Minor != v2.Minor {
+		return v.Minor - v2.Minor
+	}
+
+	return v.Patch - v2.Patch
+}
