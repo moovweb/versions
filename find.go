@@ -12,7 +12,11 @@ type FilePath struct {
 }
 
 func FindByName(rootPath string, name string) (*FilePath, error) {
-	filePaths, err := FindByNameAndVersion(rootPath, name, "")
+	return FindByNameLatestVersion(rootPath, name, "");
+}
+
+func FindByNameLatestVersion(rootPath string, name string, versionPattern string) (*FilePath, error) {
+	filePaths, err := FindByNameAndVersion(rootPath, name, versionPattern)
 
 	if err != nil {
 		return nil, err
