@@ -51,21 +51,29 @@ func NewVersion(rawVersions string) (*Version, error) {
 	}, nil
 }
 
-func GetVersion(fullName string) (*Version, error) {
-
+func Split(fullName string) (name string, version string, err error) {
 	segments := strings.Split(fullName, "-")
 
 	if len(segments) < 2 {
-		return nil, errors.New("Invalid fullname. No version suffix found")
+		return "", "", errors.New("Invalid fullname.  No version suffix found.")
 	}
+	name = segments[0]
 
 	versions := strings.SplitN(segments[len(segments)-1], ".", 4)
 
 	if len(versions) < 3 {
-		return nil, errors.New("Invalid fullname. No minor version or patch version found")
+		return "", "", errors.New("Invalid fullname.  No minor version or patch version found.")
 	}
 
-	return NewVersion(strings.Join(versions[:3], "."))
+	return name, strings.Join(versions[:3], "."), nil
+}
+
+func GetVersion(fullName string) (*Version, error) {
+	_, version, err := Split(fullName)
+	if err != nil {
+		return nil, err
+	}
+	return NewVersion(version)
 }
 
 // TODO(SJ) : Support a slice of patterns
