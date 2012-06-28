@@ -107,3 +107,23 @@ func (p *Pattern) Match(version *Version) bool {
 
 	return result
 }
+
+func (o *Operator) String() (output string) {
+	switch o.Type {
+	case LESS:
+		output = "<"
+	case LESS_EQUAL:
+		output = "<="
+	case PESSIMISTIC:
+		output = "~>"
+	case EQUAL:
+		output = "="
+	case GREATER_EQUAL:
+		output = ">="
+	case GREATER:
+		output = ">"
+	default:
+		output = ""
+	}
+	return
+}
