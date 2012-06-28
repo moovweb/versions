@@ -65,7 +65,9 @@ func parse(value string) (p *Pattern, err error) {
 
 	p = &Pattern{}
 
-	if len(tokens) > 1 {
+	if len(tokens) == 1 {
+		p.Operator = NewOperator(EQUAL)
+	} else if len(tokens) > 1 {
 		p.Operator = NewOperator(LiteralToOperator[tokens[0]])
 		rawValue = tokens[1]
 	}
