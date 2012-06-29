@@ -12,7 +12,7 @@ type FilePath struct {
 }
 
 func FindByName(rootPath string, name string) (*FilePath, error) {
-	return FindByNameAndVersionLatest(rootPath, name, "")
+	return FindByNameLatestVersion(rootPath, name, "")
 }
 
 func FindByNameAndPatternLatest(rootPath string, name string, versionPattern *Pattern) (*FilePath, error) {
