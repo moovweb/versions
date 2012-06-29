@@ -29,7 +29,7 @@ func FindByNameAndPatternLatest(rootPath string, name string, versionPattern *Pa
 	return getLatestVersion(filePaths), nil
 }
 
-func FindByNameAndVersionLatest(rootPath string, name string, versionPattern string) (*FilePath, error) {
+func FindByNameLatestVersion(rootPath string, name string, versionPattern string) (*FilePath, error) {
 	filePaths, err := FindByNameAndVersion(rootPath, name, versionPattern)
 
 	if err != nil {
