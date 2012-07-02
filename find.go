@@ -12,7 +12,7 @@ type FilePath struct {
 }
 
 func FindByName(rootPath string, name string) (*FilePath, error) {
-	return FindByNameLatestVersion(rootPath, name, "")
+	return FindByNameAndVersionLatest(rootPath, name, "")
 }
 
 func FindByNameAndPatternLatest(rootPath string, name string, versionPattern *Pattern) (*FilePath, error) {
@@ -29,7 +29,9 @@ func FindByNameAndPatternLatest(rootPath string, name string, versionPattern *Pa
 	return getLatestVersion(filePaths), nil
 }
 
-func FindByNameLatestVersion(rootPath string, name string, versionPattern string) (*FilePath, error) {
+func FindByNameAndVersionLatest(rootPath string, name string, versionPattern string) (*FilePath, error) {
+	// FindByNameLatestVersion has been deprecated. I try to look for all the instanace of the old function
+	// if I miss one please change that on and not this file.
 	filePaths, err := FindByNameAndVersion(rootPath, name, versionPattern)
 
 	if err != nil {
