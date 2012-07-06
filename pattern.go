@@ -1,11 +1,17 @@
 package versions
 
-import "strings"
+import (
+	"errors"
+	"regexp"
+	"strings"
+)
 
 type Pattern struct {
 	Operator *Operator
 	Version  *Version
 }
+
+var regex = regexp.MustCompile("(<=|~>|<|>=|=|>|)\\s*(\\d+\\.\\d+\\.?\\d*)")
 
 type Operator struct {
 	Type int
@@ -41,6 +47,7 @@ func initializeOperatorMap() {
 		"=":  EQUAL,
 		">=": GREATER_EQUAL,
 		">":  GREATER,
+		"":   EQUAL,
 	}
 
 	OperatorMapInitialized = true
@@ -60,19 +67,17 @@ func NewPattern(value string) (p *Pattern, err error) {
 }
 
 func parse(value string) (p *Pattern, err error) {
-	tokens := strings.Split(value, " ")
-	rawValue := value
+	tokens := regex.FindStringSubmatch(value)
+
+	if len(tokens) != 3 {
+		return nil, errors.New("Unable to parse string " + value)
+	}
 
 	p = &Pattern{}
 
-	if len(tokens) == 1 {
-		p.Operator = NewOperator(EQUAL)
-	} else if len(tokens) > 1 {
-		p.Operator = NewOperator(LiteralToOperator[tokens[0]])
-		rawValue = tokens[1]
-	}
+	p.Operator = NewOperator(LiteralToOperator[tokens[1]])
 
-	version, err := NewVersion(rawValue)
+	version, err := NewVersion(tokens[2])
 
 	if err != nil {
 		return nil, err
