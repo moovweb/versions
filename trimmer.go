@@ -1,15 +1,14 @@
 package versions
 
-import(
-	"strings"
+import (
 	"bytes"
-	)
-
+	"strings"
+)
 
 type trimmer struct {
 	foundDot bool
-	maxRune rune
-	minRune rune
+	maxRune  rune
+	minRune  rune
 }
 
 func newTrimmer() *trimmer {
@@ -20,9 +19,9 @@ func newTrimmer() *trimmer {
 	maxRune := maxRunes[0]
 
 	return &trimmer{
-	foundDot: false,
-	minRune:minRune,
-	maxRune:maxRune,
+		foundDot: false,
+		minRune:  minRune,
+		maxRune:  maxRune,
 	}
 }
 
@@ -33,7 +32,7 @@ func (t *trimmer) trimExtension(rune rune) bool {
 	if t.foundDot {
 		return false
 	}
-	
+
 	if string(rune) == "." {
 		t.foundDot = true
 		return true
@@ -49,6 +48,6 @@ func (t *trimmer) trimExtension(rune rune) bool {
 }
 
 func trimExtension(raw string) string {
-	t := newTrimmer()	
-	return strings.TrimRightFunc(raw, func (rune rune) bool { return t.trimExtension(rune) } )	
+	t := newTrimmer()
+	return strings.TrimRightFunc(raw, func(rune rune) bool { return t.trimExtension(rune) })
 }

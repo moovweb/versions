@@ -1,16 +1,15 @@
 package main
 
-import(
+import (
 	"fmt"
-	"versions"
 	"os"
-	)
+	"versions"
+)
 
 func usage() {
 	fmt.Printf("Usage:\n\tversions <search_path> <name> <version_pattern>\n")
 	os.Exit(1)
 }
-
 
 func main() {
 	args := os.Args
@@ -34,15 +33,14 @@ func main() {
 		if err != nil {
 			println("Error searching for files:\n" + err.Error())
 		}
-		
+
 		paths = newPaths
 	} else {
 		usage()
 	}
 
-
-	for _, path := range(paths) {
+	for _, path := range paths {
 		fmt.Printf("%v\n", path.String())
 	}
-	
+
 }

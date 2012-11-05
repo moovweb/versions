@@ -4,8 +4,8 @@ import (
 	"fmt"
 	yaml "goyaml"
 	"io/ioutil"
-	"strings"
 	"runtime"
+	"strings"
 	"testing"
 )
 
