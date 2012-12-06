@@ -2,6 +2,7 @@ package versions
 
 import (
 	"errors"
+	"fmt"
 	"path/filepath"
 )
 
@@ -10,6 +11,8 @@ type FilePath struct {
 	Name    string
 	Version *Version
 }
+
+var Debug = false
 
 func FindByName(rootPath string, name string) (*FilePath, error) {
 	return FindByNameAndVersionLatest(rootPath, name, "")
@@ -68,8 +71,10 @@ func FindByNameAndVersion(rootPath string, name string, versionPattern string) (
 		version, err := GetVersion(result)
 
 		if err != nil {
-			println("Didnt get valid version from:" + result)
-			println(err.Error())
+			if Debug {
+				fmt.Println("Didnt get valid version from:" + result)
+				fmt.Println(err.Error())
+			}
 			continue
 		}
 
@@ -101,8 +106,10 @@ func FindByNameAndPattern(rootPath string, name string, versionPattern *Pattern)
 		version, err := GetVersion(result)
 
 		if err != nil {
-			println("Didnt get valid version from:" + result)
-			println(err.Error())
+			if Debug {
+				fmt.Println("Didnt get valid version from:" + result)
+				fmt.Println(err.Error())
+			}
 			continue
 		}
 
