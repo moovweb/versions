@@ -24,8 +24,16 @@ func (p *Pattern) LessEqual(version *Version) bool {
 	return p.Less(version)
 }
 
+func (p *Pattern) All(version *Version) bool {
+	return true
+}
+
 func (p *Pattern) Equal(version *Version) bool {
 	return version.Major == p.Version.Major && version.Minor == p.Version.Minor && version.Patch == p.Version.Patch
+}
+
+func (p *Pattern) NotEqual(version *Version) bool {
+	return !p.Equal(version)
 }
 
 func (p *Pattern) Pessimistic(version *Version) bool {

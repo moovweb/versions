@@ -11,7 +11,7 @@ type Pattern struct {
 	Version  *Version
 }
 
-var regex = regexp.MustCompile("(<=|~>|<|>=|=|>|)\\s*(\\d+\\.\\d+\\.?\\d*)")
+var regex = regexp.MustCompile("(\\*|!=|<=|~>|<|>=|=|>|)\\s*(\\d+\\.\\d+\\.?\\d*)")
 
 type Operator struct {
 	Type int
@@ -30,6 +30,8 @@ const (
 	PESSIMISTIC
 	GREATER_EQUAL
 	GREATER
+	NOT_EQUAL
+	ALL
 )
 
 var LiteralToOperator map[string]int
@@ -47,6 +49,8 @@ func initializeOperatorMap() {
 		"=":  EQUAL,
 		">=": GREATER_EQUAL,
 		">":  GREATER,
+		"!=": NOT_EQUAL,
+		"*":  ALL,
 		"":   EQUAL,
 	}
 
@@ -67,6 +71,11 @@ func NewPattern(value string) (p *Pattern, err error) {
 }
 
 func parse(value string) (p *Pattern, err error) {
+	// special case, the * token does not require a version after it.
+	if value == "*" {
+		value = "*0.0"
+	}
+
 	tokens := regex.FindStringSubmatch(value)
 
 	if len(tokens) != 3 {
@@ -110,6 +119,10 @@ func (p *Pattern) Match(version *Version) bool {
 		result = p.GreaterEqual(version)
 	case GREATER:
 		result = p.Greater(version)
+	case NOT_EQUAL:
+		result = p.NotEqual(version)
+	case ALL:
+		result = p.All(version)
 	}
 
 	return result

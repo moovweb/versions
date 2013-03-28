@@ -110,4 +110,29 @@
   input:
     name: "bandersnatch"
     version: ">= 4.0.0"
-  output: 
+  output:
+-
+  name: "Not Control (You can't control me bro!)"
+  description: "Match only results that are not equal to pattern."
+  input:
+    name: "bandersnatch"
+    version: "!= 0.2.111"
+  output:
+     - test/files/bandersnatch-0.0.0.fib
+     - test/files/bandersnatch-0.0.fib
+     - test/files/bandersnatch-0.2.0.fib
+     - test/files/bandersnatch-2.0.1.fib
+     - test/files/bandersnatch-3.0.fib
+-
+  name: "All The Control"
+  description: "Match all files fitting the name, regardless of version."
+  input:
+    name: "bandersnatch"
+    version: "*"
+  output:
+     - test/files/bandersnatch-0.0.0.fib
+     - test/files/bandersnatch-0.0.fib
+     - test/files/bandersnatch-0.2.0.fib
+     - test/files/bandersnatch-0.2.111.fib
+     - test/files/bandersnatch-2.0.1.fib
+     - test/files/bandersnatch-3.0.fib
