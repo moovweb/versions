@@ -2,7 +2,7 @@ package versions
 
 import (
 	"fmt"
-	yaml "goyaml"
+	yaml "github.com/moovweb/goyaml"
 	"io/ioutil"
 	"runtime"
 	"strings"

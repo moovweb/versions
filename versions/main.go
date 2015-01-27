@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/moovweb/versions"
 	"os"
-	"versions"
 )
 
 func usage() {
